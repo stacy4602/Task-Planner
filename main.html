@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Anime-themed Task Planner</title>
+<link rel="stylesheet" href="main.css" />
+</head>
+<body class="template-sakura-pink">
+<header>
+  <h1>Anime Tasker</h1>
+  <form id="add-task-form" autocomplete="off" novalidate>
+    <input type="text" id="add-task-desc" placeholder="Add a new task..." required aria-label="Task description" />
+    <input type="datetime-local" id="add-task-time" aria-label="Task date and time" />
+    <select id="add-task-category" aria-label="Task category" required>
+      <option value="" disabled selected>Select category</option>
+      <option value="Study">Study</option>
+      <option value="Work">Work</option>
+      <option value="Anime">Anime</option>
+      <option value="Misc">Misc</option>
+    </select>
+    <label class="repeat-label" title="Repeat Daily Alert">
+      <input type="checkbox" id="repeat-daily" aria-label="Repeat daily alert" />
+      Repeat Daily Alert
+    </label>
+    <button type="submit">Add Task</button>
+  </form>
+  <div class="template-select-wrap">
+    <label for="template-selector">Choose Theme:</label>
+    <select id="template-selector" aria-label="Template selector">
+      <option value="template-mount-fuji">Mount Fuji</option>
+      <option value="template-cyber-neon">One Piece</option>
+      <option value="template-sakura-pink" selected>Sakura Pink</option>
+    </select>
+  </div>
+</header>
+
+<div id="category-container" aria-live="polite" aria-label="Task categories and lists">
+  <section class="category-box" data-category="Study" aria-label="Study tasks">
+    <h2>Study</h2>
+    <div class="task-list" id="list-Study" role="list"></div>
+  </section>
+  <section class="category-box" data-category="Work" aria-label="Work tasks">
+    <h2>Work</h2>
+    <div class="task-list" id="list-Work" role="list"></div>
+  </section>
+  <section class="category-box" data-category="Anime" aria-label="Anime tasks">
+    <h2>Anime</h2>
+    <div class="task-list" id="list-Anime" role="list"></div>
+  </section>
+  <section class="category-box" data-category="Misc" aria-label="Miscellaneous tasks">
+    <h2>Misc</h2>
+    <div class="task-list" id="list-Misc" role="list"></div>
+  </section>
+</div>
+
+<!-- Notification Overlay -->
+<div id="notification-overlay" role="alertdialog" aria-modal="true" aria-hidden="true" tabindex="-1">
+  <div id="notification-content">
+    <h3 id="notification-task-desc">Task Alert!</h3>
+    <img src="" alt="Anime character sticker" id="notification-sticker" />
+    <div id="notification-quote"></div>
+    <div id="notification-buttons">
+      <button id="notification-snooze" type="button">Snooze 5 min</button>
+      <button id="notification-dismiss" type="button">Dismiss</button>
+    </div>
+  </div>
+</div>
+
+<audio id="alert-sound" preload="auto" src="assets/sounds/eren_yeager_tatakae.mp3"></audio>
+
+<script src="app.js"></script>
+</body>
+</html>
+
