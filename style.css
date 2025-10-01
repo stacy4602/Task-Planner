@@ -177,6 +177,17 @@
     scrollbar-width: thin;
     scrollbar-color: #ff6f91 transparent;
   }
+
+  /* NEW: Display a message when the task list is empty */
+  .task-list:empty::after {
+    content: 'No tasks yet.';
+    opacity: 0.7;
+    font-style: italic;
+    display: block;
+    text-align: center;
+    padding-top: 1rem;
+  }
+
   .task-list::-webkit-scrollbar {
     width: 7px;
   }
@@ -335,7 +346,7 @@
     }
   }
   
-  /* THEMES */
+  /* --- THEMES --- */
   
   /* Sakura Pink */
   body.template-sakura-pink {
@@ -368,57 +379,46 @@
     border-color: #ff87c0cc;
   }
   
- /* CYBER NEON THEME */
-body.template-cyber-neon {
+  /* CYBER NEON THEME (One Piece) */
+  body.template-cyber-neon {
     background-image: url('assets/backgrounds/one-piece.avif');
     color: #39ff14;
   }
-  
-  /* Header */
   body.template-cyber-neon header {
-    background-color: rgba(0, 0, 80, 0.8) !important;
-    box-shadow: 0 0 18px #39ff1475 !important;
+    background-color: rgba(0, 0, 80, 0.8);
+    box-shadow: 0 0 18px #39ff1475;
   }
-  
-  /* Form container */
   body.template-cyber-neon form#add-task-form {
-    background-color: rgba(0, 60, 60, 0.85) !important;
-    box-shadow: 0 0 20px #39ff14cc !important;
-    border-radius: 20px !important;
-    transition: background-color 0.5s ease, box-shadow 0.5s ease !important;
+    background-color: rgba(0, 60, 60, 0.85);
+    box-shadow: 0 0 20px #39ff14cc;
+    border-radius: 20px;
+    transition: background-color 0.5s ease, box-shadow 0.5s ease;
   }
-  
-  /* Category boxes */
   body.template-cyber-neon .category-box {
-    background-color: rgba(0, 30, 30, 0.85) !important;
-    border-color: #39ff14cc !important;
-    box-shadow: 0 0 28px #39ff1466 !important;
-    transition: background-color 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease !important;
+    background-color: rgba(0, 30, 30, 0.85);
+    border-color: #39ff14cc;
+    box-shadow: 0 0 28px #39ff1466;
+    transition: background-color 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
   }
-  
   body.template-cyber-neon .category-box:hover {
-    background-color: rgba(0, 55, 55, 0.95) !important;
-    border-color: #39ff14ff !important;
-    box-shadow: 0 0 38px #39ff14cc !important;
+    background-color: rgba(0, 55, 55, 0.95);
+    border-color: #39ff14ff;
+    box-shadow: 0 0 38px #39ff14cc;
   }
-  
-  /* Tasks */
   body.template-cyber-neon .task {
-    background-color: rgba(57, 255, 20, 0.12) !important;
-    box-shadow: 0 0 8px #39ff1480 inset !important;
-    color: #39ff14 !important;
-    transition: background-color 0.4s ease, box-shadow 0.4s ease !important;
+    background-color: rgba(57, 255, 20, 0.12);
+    box-shadow: 0 0 8px #39ff1480 inset;
+    color: #39ff14;
+    transition: background-color 0.4s ease, box-shadow 0.4s ease;
   }
-  
   body.template-cyber-neon .task.completed {
-    color: #7bed8d !important;
-    background-color: rgba(57, 255, 20, 0.06) !important;
-    box-shadow: none !important;
+    color: #7bed8d;
+    background-color: rgba(57, 255, 20, 0.06);
+    box-shadow: none;
   }
-  
   body.template-cyber-neon .task:hover:not(.completed) {
-    background-color: rgba(57, 255, 20, 0.22) !important;
-    box-shadow: 0 0 14px #39ff14cc inset !important;
+    background-color: rgba(57, 255, 20, 0.22);
+    box-shadow: 0 0 14px #39ff14cc inset;
   }
   
   /* MOUNT FUJI THEME */
@@ -426,51 +426,39 @@ body.template-cyber-neon {
     background-image: url('assets/backgrounds/view-world-monument-celebrate-world-heritage-day.jpg');
     color: #a7c7e7;
   }
-  
-  /* Header */
   body.template-mount-fuji header {
-    background-color: rgba(20, 40, 70, 0.85) !important;
-    box-shadow: 0 0 25px #7aa7d9cc !important;
+    background-color: rgba(20, 40, 70, 0.85);
+    box-shadow: 0 0 25px #7aa7d9cc;
   }
-  
-  /* Form container */
   body.template-mount-fuji form#add-task-form {
-    background-color: rgba(20, 40, 70, 0.85) !important;
-    box-shadow: 0 0 25px #7aa7d9cc !important;
-    border-radius: 20px !important;
-    transition: background-color 0.5s ease, box-shadow 0.5s ease !important;
+    background-color: rgba(20, 40, 70, 0.85);
+    box-shadow: 0 0 25px #7aa7d9cc;
+    border-radius: 20px;
+    transition: background-color 0.5s ease, box-shadow 0.5s ease;
   }
-  
-  /* Category boxes */
   body.template-mount-fuji .category-box {
-    background-color: rgba(10, 20, 40, 0.85) !important;
-    border-color: #a7c7e7cc !important;
-    box-shadow: 0 0 28px #a6c5e799 !important;
-    transition: background-color 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease !important;
+    background-color: rgba(10, 20, 40, 0.85);
+    border-color: #a7c7e7cc;
+    box-shadow: 0 0 28px #a6c5e799;
+    transition: background-color 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
   }
-  
   body.template-mount-fuji .category-box:hover {
-    background-color: rgba(15, 30, 60, 0.95) !important;
-    border-color: #a7c7e7ff !important;
-    box-shadow: 0 0 40px #a7c7e7cc !important;
+    background-color: rgba(15, 30, 60, 0.95);
+    border-color: #a7c7e7ff;
+    box-shadow: 0 0 40px #a7c7e7cc;
   }
-  
-  /* Tasks */
   body.template-mount-fuji .task {
-    background-color: rgba(167, 199, 231, 0.12) !important;
-    box-shadow: 0 0 8px #a7c7e7aa inset !important;
-    color: #a7c7e7 !important;
-    transition: background-color 0.4s ease, box-shadow 0.4s ease !important;
+    background-color: rgba(167, 199, 231, 0.12);
+    box-shadow: 0 0 8px #a7c7e7aa inset;
+    color: #a7c7e7;
+    transition: background-color 0.4s ease, box-shadow 0.4s ease;
   }
-  
   body.template-mount-fuji .task.completed {
-    color: #e0e8f8 !important;
-    background-color: rgba(167, 199, 231, 0.06) !important;
-    box-shadow: none !important;
+    color: #e0e8f8;
+    background-color: rgba(167, 199, 231, 0.06);
+    box-shadow: none;
   }
-  
   body.template-mount-fuji .task:hover:not(.completed) {
-    background-color: rgba(167, 199, 231, 0.22) !important;
-    box-shadow: 0 0 14px #a7c7e7cc inset !important;
+    background-color: rgba(167, 199, 231, 0.22);
+    box-shadow: 0 0 14px #a7c7e7cc inset;
   }
-   
