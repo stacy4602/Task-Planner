@@ -1,464 +1,224 @@
-/* Base Reset */
-* {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: white;
-    background-size: cover;
-    background-position: center center;
-    transition: background 0.5s ease, color 0.5s ease;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  header {
-    background-color: rgba(0,0,0,0.7);
-    padding: 1rem;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0,0,0,0.7);
-  }
-  h1 {
-    margin: 0 0 0.4em;
-    font-weight: 900;
-    text-shadow: 2px 2px 5px #000;
-  }
-  
-  /* Form inputs and controls */
-  form#add-task-form {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.8rem;
-    padding: 1rem ;
-    background-color: rgba(0,0,0,0.75);
-    border-radius: 15px;
-    box-shadow: 0 0 25px #ff6f91;
-    max-width: 1000px;
-    margin: 0 auto 1rem auto;
-  }
-  #add-task-desc,
-  #add-task-time,
-  #add-task-category,
-  #repeat-daily {
-    font-size: 1rem;
-    border-radius: 12px;
-    border: 2px solid transparent;
-    padding: 0.5em 0.8em;
-    color: #333;
-    background-color: #fff;
-    font-weight: 600;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  }
-  #add-task-desc {
-    flex-grow: 3;
-    min-width: 200px;
-  }
-  #add-task-time {
-    min-width: 185px;
-  }
-  #add-task-category {
-    min-width: 140px;
-  }
-  #repeat-daily {
-    width: auto;
-    margin-right: 0.3em;
-    vertical-align: middle;
-    filter: none;
-  }
-  label.repeat-label {
-    color: white;
-    font-weight: 600;
-    user-select: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    min-width: 160px;
-    font-size: 0.875rem;
-  }
-  #add-task-desc::placeholder {
-    font-style: italic;
-    color: #666;
-  }
-  
-  /* Focus style for inputs */
-  #add-task-desc:focus,
-  #add-task-time:focus,
-  #add-task-category:focus {
-    outline: none;
-    border-color: #ff6f91;
-    box-shadow: 0 0 8px #ff6f91a0;
-  }
-  
-  /* Submit button */
-  #add-task-form button[type="submit"] {
-    cursor: pointer;
-    font-weight: 700;
-    color: white;
-    background: linear-gradient(45deg, #ff6f91, #ff9671);
-    border: none;
-    min-width: 120px;
-    border-radius: 12px;
-    transition: background 0.3s ease;
-    box-shadow: 0 0 10px #ff6f9130;
-  }
-  #add-task-form button[type="submit"]:hover,
-  #add-task-form button[type="submit"]:focus {
-    background: linear-gradient(45deg, #ff4264, #ff6c42);
-    box-shadow: 0 0 14px #ff426450;
-    outline: none;
-  }
-  
-  /* Template selector container */
-  .template-select-wrap {
-    margin-top: 0.2rem;
-    text-align: center;
-  }
-  .template-select-wrap label {
-    margin-right: 8px;
-    user-select: none;
-    font-weight: 600;
-    color: white;
-  }
-  #template-selector {
-    font-size: 1rem;
-    border-radius: 12px;
-    border: 2px solid transparent;
-    padding: 0.4em 0.8em;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-  }
-  #template-selector:focus {
-    outline: none;
-    border-color: #ff6f91;
-    box-shadow: 0 0 8px #ff6f91a0;
-  }
-  
-  /* Layout for category containers side by side */
-  #category-container {
-    flex: 1;
-    display: flex;
-    padding: 1rem;
-    gap: 1rem;
-    overflow-x: auto;
-    max-width: 100vw;
-    box-sizing: border-box;
-  }
-  .category-box {
-    flex: 1;
-    min-width: 280px;
-    background-color: rgba(0,0,0,0.55);
-    border-radius: 18px;
-    padding: 1rem 1rem 0.8rem 1rem;
-    display: flex;
-    flex-direction: column;
-    max-height: 75vh;
-    box-shadow: 0 0 20px #ff6f91cc;
-    transition: background-color 0.5s ease, box-shadow 0.4s ease;
-    border: 2px solid transparent;
-  }
-  .category-box:hover {
-    box-shadow: 0 0 30px #ff6f91ff;
-    border-color: #ff6f91ff;
-  }
-  .category-box h2 {
-    margin-top: 0;
-    font-size: 1.5rem;
-    text-align: center;
-    text-shadow: 2px 2px 5px #000;
-    font-weight: 900;
-  }
-  .task-list {
-    flex: 1;
-    overflow-y: auto;
-    margin-top: 0.8rem;
-    padding-right: 4px;
-    scrollbar-width: thin;
-    scrollbar-color: #ff6f91 transparent;
-  }
+/* REFINED: General Styling & New Font */
+:root {
+  --theme-color: #ff6f91; /* Default theme color */
+}
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif; /* New font */
+  color: white;
+  background-size: cover;
+  background-position: center center;
+  transition: background 0.5s ease, color 0.5s ease;
+  min-height: 100vh;
+}
+header {
+  /* REMOVED: Generic background-color removed from here */
+  backdrop-filter: blur(2px); /* Increased blur slightly */
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+h1 {
+  margin: 0 0 0.5em;
+  font-weight: 700;
+  text-shadow: 2px 2px 5px #000;
+}
 
-  /* NEW: Display a message when the task list is empty */
-  .task-list:empty::after {
-    content: 'No tasks yet.';
-    opacity: 0.7;
-    font-style: italic;
-    display: block;
-    text-align: center;
-    padding-top: 1rem;
-  }
+/* REFINED: Form inputs and controls */
+form#add-task-form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 1rem;
+  background-color: rgba(0,0,0,0.3);
+  border-radius: 15px;
+  max-width: 1000px;
+  margin: 0 auto 1rem auto;
+}
+input[type="text"], input[type="datetime-local"], select {
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  padding: 0.6em 1em;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #222;
+  font-weight: 400;
+  transition: all 0.3s ease;
+}
+input[type="text"]:focus, input[type="datetime-local"]:focus, select:focus {
+  outline: none;
+  border-color: var(--theme-color);
+  box-shadow: 0 0 10px var(--theme-color);
+}
+#add-task-form button[type="submit"] {
+  cursor: pointer;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  color: white;
+  background: var(--theme-color);
+  border: none;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  padding: 0 1.5rem;
+}
+#add-task-form button[type="submit"]:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px var(--theme-color);
+}
 
-  .task-list::-webkit-scrollbar {
-    width: 7px;
-  }
-  .task-list::-webkit-scrollbar-thumb {
-    background-color: #ff6f91cc;
-    border-radius: 10px;
-    border: 2px solid transparent;
-  }
-  .task-list::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  
-  /* Individual Task Style */
-  .task {
-    background-color: rgba(255,255,255,0.15);
-    margin: 0.3em 0;
-    padding: 0.6em 0.9em;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    box-shadow: 0 0 4px #ff6f91a0 inset;
-    font-weight: 600;
-    user-select: text;
-    transition: background-color 0.3s ease;
-    cursor: default;
-  }
-  .task.completed {
-    color: #bbb;
-    text-decoration: line-through;
-    background-color: rgba(255,255,255,0.05);
-    box-shadow: none;
-  }
-  .task-desc {
-    flex: 1 1 100%;
-    margin-bottom: 0.25em;
-    word-break: break-word;
-    font-size: 1rem;
-  }
-  .task-time {
-    flex: 0 0 auto;
-    font-size: 0.85rem;
-    opacity: 0.8;
-    margin-right: 10px;
-    white-space: nowrap;
-    font-style: italic;
-    user-select: none;
-  }
-  .task-actions {
-    flex: 0 0 auto;
-    display: flex;
-    gap: 0.6em;
-  }
-  .task-actions button {
-    background-color: transparent;
-    border: none;
-    color: white;
-    font-weight: 900;
-    font-size: 1.1rem;
-    cursor: pointer;
-    padding: 0 7px 0 7px;
-    line-height: 1;
-    border-radius: 7px;
-    transition: color 0.25s ease;
-    user-select: none;
-  }
-  .task-actions button:hover,
-  .task-actions button:focus {
-    color: #ff6f91;
-    outline: none;
-  }
-  
-  /* Notification Overlay */
-  #notification-overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.9);
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    padding: 1rem;
-    text-align: center;
-  }
-  #notification-content {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 24px 28px;
-    max-width: 380px;
-    width: 90%;
-    color: white;
-    box-shadow: 0 0 22px #ff6f91, 0 0 45px #ff90a832;
-    font-family: 'Comic Sans MS', cursive, sans-serif;
-  }
-  #notification-content h3 {
-    margin-top: 0;
-    font-size: 1.7rem;
-    margin-bottom: 0.8rem;
-    text-shadow: 0 0 10px #ff6f91aa;
-  }
-  #notification-sticker {
-    width: 160px;
-    max-width: 100%;
-    user-select: none;
-    margin: 0 auto 18px auto;
-    border-radius: 15px;
-    box-shadow: 0 0 18px #ff6f91, 0 0 36px #ff90a8cc;
-    filter: drop-shadow(0 0 3px #ff6f91);
-    object-fit: contain;
-    aspect-ratio: 1 / 1;
-  }
-  #notification-quote {
-    font-style: italic;
-    margin-bottom: 14px;
-    font-size: 1.1rem;
-    line-height: 1.3;
-    text-shadow: 0 0 10px #ff6f91aa;
-  }
-  #notification-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-  }
-  #notification-buttons button {
-    background-color: #ff6f91;
-    padding: 0.6rem 1.4rem;
-    font-weight: 900;
-    border-radius: 14px;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 1.1rem;
-    user-select: none;
-    transition: background-color 0.3s ease;
-  }
-  #notification-buttons button:hover,
-  #notification-buttons button:focus {
-    background-color: #ff4966;
-    outline: none;
-  }
-  
-  /* Responsive */
-  @media (max-width: 920px) {
-    #category-container {
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .category-box {
-      max-width: 90vw;
-      min-width: unset;
-      flex: unset;
-      margin-bottom: 1rem;
-    }
-  }
-  
-  /* --- THEMES --- */
-  
-  /* Sakura Pink */
-  body.template-sakura-pink {
-    background-image: url('assets/backgrounds/beautiful-anime-sakura-landscape-cartoon-scene.jpg');
-    color: #ff87c0;
-  }
-  body.template-sakura-pink header {
-    background-color: rgba(48, 0, 48, 0.8);
-    box-shadow: 0 0 15px #ff87c040;
-  }
-  body.template-sakura-pink button[type="submit"],
-  body.template-sakura-pink #notification-buttons button {
-    background: linear-gradient(45deg, #ff6f91, #ff9671);
-    box-shadow: 0 0 15px #ff6f91aa;
-    color: white;
-  }
-  body.template-sakura-pink button[type="submit"]:hover,
-  body.template-sakura-pink #notification-buttons button:hover {
-    background: linear-gradient(45deg, #ff4966, #ff6c42);
-    box-shadow: 0 0 22px #ff4966cc;
-    color: white;
-  }
-  body.template-sakura-pink .category-box {
-    background-color: rgba(75, 0, 75, 0.6);
-    border-color: #ff87c0a0;
-    box-shadow: 0 0 24px #ff87c055;
-  }
-  body.template-sakura-pink .category-box:hover {
-    box-shadow: 0 0 35px #ff87c0aa;
-    border-color: #ff87c0cc;
-  }
-  
-  /* CYBER NEON THEME (One Piece) */
-  body.template-cyber-neon {
-    background-image: url('assets/backgrounds/one-piece.avif');
-    color: #39ff14;
-  }
-  body.template-cyber-neon header {
-    background-color: rgba(0, 0, 80, 0.8);
-    box-shadow: 0 0 18px #39ff1475;
-  }
-  body.template-cyber-neon form#add-task-form {
-    background-color: rgba(0, 60, 60, 0.85);
-    box-shadow: 0 0 20px #39ff14cc;
-    border-radius: 20px;
-    transition: background-color 0.5s ease, box-shadow 0.5s ease;
-  }
-  body.template-cyber-neon .category-box {
-    background-color: rgba(0, 30, 30, 0.85);
-    border-color: #39ff14cc;
-    box-shadow: 0 0 28px #39ff1466;
-    transition: background-color 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
-  }
-  body.template-cyber-neon .category-box:hover {
-    background-color: rgba(0, 55, 55, 0.95);
-    border-color: #39ff14ff;
-    box-shadow: 0 0 38px #39ff14cc;
-  }
-  body.template-cyber-neon .task {
-    background-color: rgba(57, 255, 20, 0.12);
-    box-shadow: 0 0 8px #39ff1480 inset;
-    color: #39ff14;
-    transition: background-color 0.4s ease, box-shadow 0.4s ease;
-  }
-  body.template-cyber-neon .task.completed {
-    color: #7bed8d;
-    background-color: rgba(57, 255, 20, 0.06);
-    box-shadow: none;
-  }
-  body.template-cyber-neon .task:hover:not(.completed) {
-    background-color: rgba(57, 255, 20, 0.22);
-    box-shadow: 0 0 14px #39ff14cc inset;
-  }
-  
-  /* MOUNT FUJI THEME */
-  body.template-mount-fuji {
-    background-image: url('assets/backgrounds/view-world-monument-celebrate-world-heritage-day.jpg');
-    color: #a7c7e7;
-  }
-  body.template-mount-fuji header {
-    background-color: rgba(20, 40, 70, 0.85);
-    box-shadow: 0 0 25px #7aa7d9cc;
-  }
-  body.template-mount-fuji form#add-task-form {
-    background-color: rgba(20, 40, 70, 0.85);
-    box-shadow: 0 0 25px #7aa7d9cc;
-    border-radius: 20px;
-    transition: background-color 0.5s ease, box-shadow 0.5s ease;
-  }
-  body.template-mount-fuji .category-box {
-    background-color: rgba(10, 20, 40, 0.85);
-    border-color: #a7c7e7cc;
-    box-shadow: 0 0 28px #a6c5e799;
-    transition: background-color 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
-  }
-  body.template-mount-fuji .category-box:hover {
-    background-color: rgba(15, 30, 60, 0.95);
-    border-color: #a7c7e7ff;
-    box-shadow: 0 0 40px #a7c7e7cc;
-  }
-  body.template-mount-fuji .task {
-    background-color: rgba(167, 199, 231, 0.12);
-    box-shadow: 0 0 8px #a7c7e7aa inset;
-    color: #a7c7e7;
-    transition: background-color 0.4s ease, box-shadow 0.4s ease;
-  }
-  body.template-mount-fuji .task.completed {
-    color: #e0e8f8;
-    background-color: rgba(167, 199, 231, 0.06);
-    box-shadow: none;
-  }
-  body.template-mount-fuji .task:hover:not(.completed) {
-    background-color: rgba(167, 199, 231, 0.22);
-    box-shadow: 0 0 14px #a7c7e7cc inset;
-  }
+.template-selector {
+  color: white;
+}
+.repeat-label{
+  color: white !important;
+}
+.task-list{
+  color: white;
+}
+
+/* REFINED: Category containers */
+#category-container {
+  flex: 1;
+  display: flex;
+  padding: 1.5rem;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.category-box {
+  /* REMOVED: Generic background-color removed from here */
+  backdrop-filter: blur(2px); /* Increased blur slightly */
+  flex-basis: 450px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  max-height: 70vh;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: all 0.4s ease;
+}
+.category-box:hover {
+  border-color: var(--theme-color);
+  box-shadow: 0 0 25px var(--theme-color);
+}
+.category-box h2 {
+  margin-top: 0;
+  text-align: center;
+  text-shadow: 2px 2px 5px #000;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+/* REFINED: Task Styling */
+.task-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+.task {
+  background-color: rgba(255,255,255,0.2);
+  margin-bottom: 0.7rem;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 400;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(100px) !important;
+}
+.task:hover {
+  background-color: rgba(255,255,255,0.4);
+  transform: scale(1.02);
+}
+.task.completed .task-desc {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+.task-actions button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  transition: all 0.2s ease;
+}
+.task-actions button:hover {
+  color: var(--theme-color);
+  transform: scale(1.2);
+}
+
+/* NEW/REFINED: Modal (Notification & Edit) Styling */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(5px);
+  display: none; /* Hidden by default */
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+.modal-content {
+  background: rgba(30, 30, 30, 0.8);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 0 30px var(--theme-color);
+}
+.modal-content h3 {
+  margin-top: 0;
+  font-size: 1.7rem;
+}
+#notification-sticker {
+  width: 150px;
+  margin: 1rem auto;
+  border-radius: 15px;
+}
+#edit-modal-buttons, #notification-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+#edit-modal-buttons button, #notification-buttons button {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  padding: 0.7rem 1.5rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+#edit-modal-save, #notification-snooze {
+  background-color: var(--theme-color);
+  color: white;
+}
+#edit-modal-cancel, #notification-dismiss {
+  background-color: #555;
+  color: white;
+}
+
+/* --- THEME DEFINITIONS --- */
+body.template-sakura-pink { --theme-color: #ff87c0; background-image: url('assets/backgrounds/sakura.jpg'); }
+body.template-one-piece { --theme-color: #39a2db; background-image: url('assets/backgrounds/one-piece.avif'); }
+body.template-jujutsu-kaisen { --theme-color: #e53935; background-image: url('assets/backgrounds/jujutsu-kaisen.jpeg'); }
+body.template-demon-slayer { --theme-color: #4db6ac; background-image: url('assets/backgrounds/demon-slayer.jpeg'); }
+body.template-mount-fuji { --theme-color: #a7c7e7; background-image: url('assets/backgrounds/mount-fuji.jpg'); }
+
+/* NEW: Theme-based background colors with opacity */
+body.template-sakura-pink header, body.template-sakura-pink .category-box { background-color: rgba(255, 135, 192, 0.2); color: #ff87c0; }
+body.template-one-piece header, body.template-one-piece .category-box { background-color: rgba(57, 162, 219, 0.2); color:#39a2db; }
+body.template-jujutsu-kaisen header, body.template-jujutsu-kaisen .category-box { background-color: rgba(229, 57, 53, 0.2); color:#e53935; }
+body.template-demon-slayer header, body.template-demon-slayer .category-box { background-color: rgba(77, 182, 172, 0.2); color:#4db6ac }
+body.template-mount-fuji header, body.template-mount-fuji .category-box { background-color: rgba(167, 199, 231, 0.2); color:#a7c7e7; }
