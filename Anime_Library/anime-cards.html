@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Library - Anime World</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="anime-cards.css">
+</head>
+<body class="template-sakura-pink">
+
+    <header class="site-header">
+        <div class="header-content">
+            <h1><a href="index.html">Anime World</a></h1>
+            <div class="template-select-wrap">
+                <label for="template-selector" class="template-selector">Theme:</label>
+                <select id="template-selector" aria-label="Template selector">
+                    <option value="template-default" selected>Default</option>
+                    <option value="template-sakura-pink">Sakura Pink</option>
+                    <option value="template-one-piece">One Piece</option>
+                    <option value="template-jujutsu-kaisen">Jujutsu Kaisen</option>
+                    <option value="template-demon-slayer">Demon Slayer</option>
+                    <option value="template-mount-fuji">Mount Fuji</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <h2>Now Airing This Season</h2>
+        <div id="anime-card-grid">
+            <p class="loading-text">Loading seasonal anime...</p>
+        </div>
+    </main>
+
+    <div id="anime-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <button id="modal-close-btn" class="modal-close">✕</button>
+            <div id="modal-content-inner">
+                <p class="loading-text">Loading details...</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 Anime World. All rights reserved.</p>
+    </footer>
+
+    <script src="anime-cards.js"></script>
+</body>
+</html>
