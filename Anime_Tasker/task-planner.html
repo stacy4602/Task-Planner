@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Anime-themed Task Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="task-planner.css" />
+</head>
+<body class="template-sakura-pink">
+
+<header class="site-header">
+    <div class="header-content">
+        <h1>Anime World</h1>
+        <div class="template-select-wrap">
+            <label for="template-selector" class="template-selector">Theme:</label>
+            <select id="template-selector" aria-label="Template selector">
+               <option value="template-default" selected>Default</option>
+                <option value="template-sakura-pink">Sakura Pink</option>
+                <option value="template-one-piece">One Piece</option>
+                <option value="template-jujutsu-kaisen">Jujutsu Kaisen</option>
+                <option value="template-demon-slayer">Demon Slayer</option>
+                <option value="template-mount-fuji">Mount Fuji</option>
+            </select>
+        </div>
+    </div>
+</header>
+
+<main class="page-content">
+    <header class="page-header">
+      <h1>Anime Tasker</h1>
+      <form id="add-task-form" autocomplete="off" novalidate>
+        <input type="text" id="add-task-desc" placeholder="Add a new task..." required aria-label="Task description" />
+        <input type="datetime-local" id="add-task-time" aria-label="Task date and time" />
+        <select id="add-task-category" aria-label="Task category" required>
+          <option value="" disabled selected>Select category</option>
+          <option value="Anime World">Anime World</option>
+          <option value="Real Life">Real Life</option>
+        </select>
+        <label class="repeat-label" title="Repeat Daily Alert">
+          <input type="checkbox" id="repeat-daily" aria-label="Repeat daily alert" />
+          Repeat Daily
+        </label>
+        <button type="submit">Add Task</button>
+      </form>
+      </header>
+
+    <div id="category-container" aria-live="polite" aria-label="Task categories and lists">
+      <section class="category-box" data-category="Anime World" aria-label="Anime World tasks">
+        <h2>Anime World</h2>
+        <div class="task-list" id="list-Anime World" role="list"></div>
+      </section>
+      <section class="category-box" data-category="Real Life" aria-label="Real Life tasks">
+        <h2>Real Life</h2>
+        <div class="task-list" id="list-Real Life" role="list"></div>
+      </section>
+    </div>
+</main>
+
+<div id="notification-overlay" class="modal-overlay" role="alertdialog" aria-modal="true" aria-hidden="true" tabindex="-1">
+  <div class="modal-content">
+    <h3 id="notification-task-desc">Task Alert!</h3>
+    <img src="" alt="Anime character sticker" id="notification-sticker" />
+    <div id="notification-quote"></div>
+    <div id="notification-buttons">
+      <button id="notification-snooze" type="button">Snooze 5 min</button>
+      <button id="notification-dismiss" type="button">Dismiss</button>
+    </div>
+  </div>
+</div>
+
+<div id="edit-modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
+  <div class="modal-content">
+    <h3>Edit Task</h3>
+    <form id="edit-task-form">
+      <label for="edit-task-desc">Task Description:</label>
+      <input type="text" id="edit-task-desc" required aria-label="New task description" />
+      
+      <label for="edit-task-time">Task Time (optional):</label>
+      <input type="datetime-local" id="edit-task-time" aria-label="New task time" />
+
+      <label for="edit-task-category">Category:</label>
+      <select id="edit-task-category" required aria-label="New task category">
+          <option value="Anime World">Anime World</option>
+          <option value="Real Life">Real Life</option>
+      </select>
+      
+      <div id="edit-modal-buttons">
+        <button id="edit-modal-cancel" type="button">Cancel</button>
+        <button id="edit-modal-save" type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<audio id="alert-sound-default" preload="auto" src="assets/sounds/eren_yeager_tatakae.mp3"></audio>
+<audio id="alert-sound-one-piece" preload="auto" src="assets/sounds/eren_yeager_tatakae.mp3"></audio>
+<audio id="alert-sound-jujutsu-kaisen" preload="auto" src="assets/sounds/eren_yeager_tatakae.mp3"></audio>
+<audio id="alert-sound-demon-slayer" preload="auto" src="assets/sounds/eren_yeager_tatakae.mp3"></audio>
+
+<footer>
+    <p>© 2025 Anime World. All rights reserved.</p>
+</footer>
+
+<script src="task-planner.js"></script>
+</body>
+</html>
