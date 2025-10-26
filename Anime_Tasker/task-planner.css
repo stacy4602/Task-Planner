@@ -301,12 +301,12 @@ input[type="text"]:focus, input[type="datetime-local"]:focus, select:focus {
 
 /* --- THEME DEFINITIONS --- */
 /* (These now apply the color to the new site-header) */
-body.template-default { --theme-color: #e11584; background-image: url('assets/backgrounds/homescreen-bg.jpeg'); }
-body.template-sakura-pink { --theme-color: #ff87c0; background-image: url('assets/backgrounds/sakura.jpg'); }
-body.template-one-piece { --theme-color: #39a2db; background-image: url('assets/backgrounds/one-piece.avif'); }
-body.template-jujutsu-kaisen { --theme-color: #e53935; background-image: url('assets/backgrounds/jujutsu-kaisen.jpeg'); }
-body.template-demon-slayer { --theme-color: #4db6ac; background-image: url('assets/backgrounds/demon-slayer.jpeg'); }
-body.template-mount-fuji { --theme-color: #a7c7e7; background-image: url('assets/backgrounds/mount-fuji.jpg'); }
+body.template-default { --theme-color: #e11584; background-image: url('../assets/backgrounds/homescreen-bg.jpeg'); }
+body.template-sakura-pink { --theme-color: #ff87c0; background-image: url('../assets/backgrounds/sakura.jpg'); }
+body.template-one-piece { --theme-color: #39a2db; background-image: url('../assets/backgrounds/one-piece.avif'); }
+body.template-jujutsu-kaisen { --theme-color: #e53935; background-image: url('../assets/backgrounds/jujutsu-kaisen.jpeg'); }
+body.template-demon-slayer { --theme-color: #4db6ac; background-image: url('../assets/backgrounds/demon-slayer.jpeg'); }
+body.template-mount-fuji { --theme-color: #a7c7e7; background-image: url('../assets/backgrounds/mount-fuji.jpg'); }
 
 /* UPDATED: Theme background colors now apply to .site-header */
 body.template-sakura-pink header.page-header, body.template-sakura-pink .category-box { background-color: rgba(255, 135, 192, 0.2); color: #ff87c0; }

@@ -36,20 +36,20 @@
     
     const themedCharacters = {
         'template-one-piece': [
-            { name: 'Luffy', quotes: ["I'm gonna be King of the Pirates!"], sticker: 'assets/characters/luffy1.gif' },
-            { name: 'Zoro', quotes: ["Nothing happened."], sticker: 'assets/characters/luffy2.gif' }
+            { name: 'Luffy', quotes: ["I'm gonna be King of the Pirates!"], sticker: '../assets/characters/luffy1.gif' },
+            { name: 'Zoro', quotes: ["Nothing happened."], sticker: '../assets/characters/luffy2.gif' }
         ],
         'template-jujutsu-kaisen': [
-            { name: 'Gojo Satoru', quotes: ["Throughout Heaven and Earth, I alone am the honored one."], sticker: 'assets/characters/gojo.gif' },
-            { name: 'Sukuna', quotes: ["Know your place, fool."], sticker: 'assets/characters/gojo.gif' }
+            { name: 'Gojo Satoru', quotes: ["Throughout Heaven and Earth, I alone am the honored one."], sticker: '../assets/characters/gojo.gif' },
+            { name: 'Sukuna', quotes: ["Know your place, fool."], sticker: '../assets/characters/gojo.gif' }
         ],
         'template-demon-slayer': [
-            { name: 'Tanjiro', quotes: ["I can do it. I know I can do it."], sticker: 'assets/characters/dazai.gif' },
-            { name: 'Inosuke', quotes: ["Pig Assault!"], sticker: 'assets/characters/dazai.gif' }
+            { name: 'Tanjiro', quotes: ["I can do it. I know I can do it."], sticker: '../assets/characters/dazai.gif' },
+            { name: 'Inosuke', quotes: ["Pig Assault!"], sticker: '../assets/characters/dazai.gif' }
         ],
         'default': [
-            { name: 'Sailor Moon', quotes: ["In the name of the moon, I’ll punish you!"], sticker: 'assets/characters/sailormoon1.gif' },
-            { name: 'Dazai', quotes: ["A good book is always good."], sticker: 'assets/characters/dazai.gif' }
+            { name: 'Sailor Moon', quotes: ["In the name of the moon, I’ll punish you!"], sticker: '../assets/characters/sailormoon1.gif' },
+            { name: 'Dazai', quotes: ["A good book is always good."], sticker: '../assets/characters/dazai.gif' }
         ]
     };
 
