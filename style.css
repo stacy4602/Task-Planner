@@ -12,8 +12,7 @@ body {
   min-height: 100vh;
 }
 header {
-  /* REMOVED: Generic background-color removed from here */
-  backdrop-filter: blur(2px); /* Increased blur slightly */
+  backdrop-filter: blur(2px);
   padding: 1rem;
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -88,8 +87,7 @@ input[type="text"]:focus, input[type="datetime-local"]:focus, select:focus {
   flex-wrap: wrap;
 }
 .category-box {
-  /* REMOVED: Generic background-color removed from here */
-  backdrop-filter: blur(2px); /* Increased blur slightly */
+  backdrop-filter: blur(2px);
   flex-basis: 450px;
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -130,15 +128,38 @@ input[type="text"]:focus, input[type="datetime-local"]:focus, select:focus {
   justify-content: space-between;
   font-weight: 400;
   transition: all 0.3s ease;
-  backdrop-filter: blur(100px) !important;
+  backdrop-filter: blur(100px); /* Removed !important */
 }
 .task:hover {
   background-color: rgba(255,255,255,0.4);
   transform: scale(1.02);
 }
+
+/* NEW: Wrapper for description and time */
+.task-details {
+  flex-grow: 1;
+  margin-right: 10px;
+  word-break: break-word; /* Prevents long text from overflowing */
+}
+
 .task.completed .task-desc {
   text-decoration: line-through;
   opacity: 0.6;
+}
+
+/* NEW: Style for the task's time display */
+.task-time {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  margin-top: 4px;
+  display: block; /* Makes it appear below the description */
+}
+.task-time:empty {
+  display: none; /* Hides the element if there is no time */
+}
+
+.task-actions {
+  flex-shrink: 0; /* Prevents action buttons from wrapping */
 }
 .task-actions button {
   background: none;
@@ -173,18 +194,50 @@ input[type="text"]:focus, input[type="datetime-local"]:focus, select:focus {
   padding: 2rem;
   max-width: 400px;
   width: 90%;
-  text-align: center;
+  text-align: left; /* UPDATED: Aligned left for form labels */
   box-shadow: 0 0 30px var(--theme-color);
 }
 .modal-content h3 {
   margin-top: 0;
   font-size: 1.7rem;
+  text-align: center; /* RE-CENTERED: Keep h3 centered */
+}
+
+/* NEW: Styles for Edit Modal Form */
+#edit-task-form label {
+  display: block;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-bottom: 0.3rem;
+  margin-top: 0.8rem;
+}
+#edit-task-form input, #edit-task-form select {
+  width: 100%;
+  box-sizing: border-box; /* Ensures padding doesn't break width */
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  padding: 0.6em 1em;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #222;
+}
+#edit-task-form input:focus, #edit-task-form select:focus {
+  outline: none;
+  border-color: var(--theme-color);
+  box-shadow: 0 0 10px var(--theme-color);
+}
+
+/* Notification-specific content (centered) */
+#notification-overlay .modal-content {
+  text-align: center;
 }
 #notification-sticker {
   width: 150px;
   margin: 1rem auto;
   border-radius: 15px;
 }
+
 #edit-modal-buttons, #notification-buttons {
   display: flex;
   justify-content: center;

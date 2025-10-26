@@ -65,7 +65,18 @@
   <div class="modal-content">
     <h3>Edit Task</h3>
     <form id="edit-task-form">
+      <label for="edit-task-desc">Task Description:</label>
       <input type="text" id="edit-task-desc" required aria-label="New task description" />
+      
+      <label for="edit-task-time">Task Time (optional):</label>
+      <input type="datetime-local" id="edit-task-time" aria-label="New task time" />
+
+      <label for="edit-task-category">Category:</label>
+      <select id="edit-task-category" required aria-label="New task category">
+          <option value="Anime World">Anime World</option>
+          <option value="Real Life">Real Life</option>
+      </select>
+      
       <div id="edit-modal-buttons">
         <button id="edit-modal-cancel" type="button">Cancel</button>
         <button id="edit-modal-save" type="submit">Save</button>
@@ -73,8 +84,6 @@
     </form>
   </div>
 </div>
-
-
 <audio id="alert-sound-default" preload="auto" src="assets/sounds/eren_yeager_tatakae.mp3"></audio>
 <audio id="alert-sound-one-piece" preload="auto" src="assets/sounds/eren_yeager_tatakae.mp3"></audio>
 <audio id="alert-sound-jujutsu-kaisen" preload="auto" src="assets/sounds/eren_yeager_tatakae.mp3"></audio>
@@ -84,4 +93,3 @@
 <script src="script.js"></script>
 </body>
 </html>
-

@@ -7,7 +7,6 @@
     const repeatCheckbox = document.getElementById('repeat-daily');
     const templateSelector = document.getElementById('template-selector');
     
-    // Notification elements
     const notificationOverlay = document.getElementById('notification-overlay');
     const notificationTaskDesc = document.getElementById('notification-task-desc');
     const notificationSticker = document.getElementById('notification-sticker');
@@ -15,13 +14,14 @@
     const notificationSnoozeBtn = document.getElementById('notification-snooze');
     const notificationDismissBtn = document.getElementById('notification-dismiss');
 
-    // Edit Modal elements
+    // UPDATED: Edit Modal elements
     const editModalOverlay = document.getElementById('edit-modal-overlay');
     const editForm = document.getElementById('edit-task-form');
     const editDescInput = document.getElementById('edit-task-desc');
+    const editTaskTimeInput = document.getElementById('edit-task-time'); // NEW
+    const editTaskCategorySelect = document.getElementById('edit-task-category'); // NEW
     const editCancelBtn = document.getElementById('edit-modal-cancel');
 
-    // Audio elements
     let currentAlertSound = document.getElementById('alert-sound-default');
 
     // --- Data & State Management ---
@@ -29,13 +29,11 @@
     let tasks = [];
     let currentEditingTaskId = null;
     
-    // RESTORED: Notification Queue & State
     let notificationQueue = [];
     let notificationVisible = false;
     let currentNotificationTaskId = null;
-    let alertTimeoutIds = new Map(); // Stores { taskId -> timeoutId }
+    let alertTimeoutIds = new Map(); 
     
-    // --- Theme-aligned Notification Data ---
     const themedCharacters = {
         'template-one-piece': [
             { name: 'Luffy', quotes: ["I'm gonna be King of the Pirates!"], sticker: 'assets/characters/luffy1.gif' },
@@ -54,11 +52,43 @@
             { name: 'Dazai', quotes: ["A good book is always good."], sticker: 'assets/characters/dazai.gif' }
         ]
     };
+
+    // --- NEW: Helper Functions for Time ---
     
+    /**
+     * Formats a timestamp into a user-friendly string (e.g., "10/26/25, 1:30 PM")
+     */
+    function formatTaskTime(timestamp) {
+        if (!timestamp) return "";
+        const date = new Date(timestamp);
+        return date.toLocaleString([], {
+            dateStyle: 'short',
+            timeStyle: 'short'
+        });
+    }
+
+    /**
+     * Converts a timestamp into the format required by <input type="datetime-local">
+     * (YYYY-MM-DDTHH:MM)
+     */
+    function toDateTimeLocalString(timestamp) {
+        if (!timestamp) return "";
+        const date = new Date(timestamp);
+        // Manually build the string in local time to avoid UTC issues
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        
+        return `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+
     // --- Core Task Functions ---
     function saveTasks() { localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks)); }
     function loadTasks() { tasks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
 
+    // UPDATED: renderTasks now shows the time
     function renderTasks() {
         const categories = ['Anime World', 'Real Life'];
         categories.forEach(category => {
@@ -71,8 +101,14 @@
                 taskEl.classList.toggle('completed', task.completed);
                 taskEl.dataset.id = task.id;
 
+                const timeString = formatTaskTime(task.time); // Get formatted time
+
+                // New HTML structure includes a wrapper for desc and time
                 taskEl.innerHTML = `
-                    <span class="task-desc">${task.desc}</span>
+                    <div class="task-details">
+                        <span class="task-desc">${task.desc}</span>
+                        <span class="task-time">${timeString}</span>
+                    </div>
                     <div class="task-actions">
                         <button title="Edit task">✎</button>
                         <button title="Complete task">${task.completed ? '↻' : '✔'}</button>
@@ -101,7 +137,7 @@
         tasks.push(newTask);
         saveTasks();
         renderTasks();
-        scheduleAlert(newTask); // FIXED: Schedule alert for the new task
+        scheduleAlert(newTask);
     }
 
     function toggleComplete(id) {
@@ -110,25 +146,29 @@
             task.completed = !task.completed;
             saveTasks();
             renderTasks();
-            scheduleAllAlerts(); // FIXED: Re-evaluate all alerts
+            scheduleAllAlerts(); 
         }
     }
 
     function deleteTask(id) {
         if (confirm("Are you sure you want to delete this task?")) {
-            clearScheduledAlert(id); // FIXED: Clear any pending alert before deleting
+            clearScheduledAlert(id); 
             tasks = tasks.filter(t => t.id !== id);
             saveTasks();
             renderTasks();
         }
     }
 
-    // --- Edit Modal Functions ---
+    // UPDATED: Edit Modal Functions now handle time and category
     function openEditModal(id) {
         currentEditingTaskId = id;
         const task = tasks.find(t => t.id === id);
         if (task) {
+            // Populate all three fields
             editDescInput.value = task.desc;
+            editTaskTimeInput.value = toDateTimeLocalString(task.time);
+            editTaskCategorySelect.value = task.category;
+            
             editModalOverlay.style.display = 'flex';
             editDescInput.focus();
         }
@@ -143,14 +183,20 @@
         e.preventDefault();
         const task = tasks.find(t => t.id === currentEditingTaskId);
         if (task) {
+            // Read new values from all three fields
             task.desc = editDescInput.value.trim();
+            const newTimeVal = editTaskTimeInput.value;
+            task.time = newTimeVal ? new Date(newTimeVal).getTime() : null;
+            task.category = editTaskCategorySelect.value;
+            
             saveTasks();
             renderTasks();
+            scheduleAllAlerts(); // CRITICAL: Reschedule all alerts
         }
         closeEditModal();
     }
 
-    // --- RESTORED: Notification & Scheduling Functions ---
+    // --- Notification & Scheduling Functions (Unchanged) ---
     function scheduleAlert(task, customTime) {
         clearScheduledAlert(task.id);
         if (task.completed || (!task.time && !customTime)) return;
@@ -172,7 +218,7 @@
             const timeoutId = setTimeout(() => {
                 queueAlert(task);
                 if (task.repeatDaily) {
-                    scheduleAlert(task); // Reschedule for the next day
+                    scheduleAlert(task); 
                 }
             }, delay);
             alertTimeoutIds.set(task.id, timeoutId);
@@ -180,7 +226,6 @@
     }
 
     function scheduleAllAlerts() {
-        // Clear all existing timeouts before rescheduling
         alertTimeoutIds.forEach(timeoutId => clearTimeout(timeoutId));
         alertTimeoutIds.clear();
         tasks.forEach(task => scheduleAlert(task));
@@ -229,12 +274,12 @@
     function snoozeNotification() {
         const task = tasks.find(t => t.id === currentNotificationTaskId);
         if (task) {
-            scheduleAlert(task, Date.now() + 5 * 60 * 1000); // Snooze for 5 mins
+            scheduleAlert(task, Date.now() + 5 * 60 * 1000); 
         }
         hideNotification();
     }
 
-    // --- UI & Utility Functions ---
+    // --- UI & Utility Functions (Unchanged) ---
     function setTemplate(templateName) {
         document.body.className = templateName;
         switch (templateName) {
@@ -279,7 +324,7 @@
         loadTasks();
         renderTasks();
         setTemplate(templateSelector.value);
-        scheduleAllAlerts(); // FIXED: Schedule alerts for all existing tasks on load
+        scheduleAllAlerts(); 
     }
     
     init();
