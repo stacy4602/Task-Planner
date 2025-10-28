@@ -36,6 +36,15 @@ header.site-header {
   font-weight: 700;
   text-shadow: 2px 2px 5px #000;
 }
+.site-header h1 a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.site-header h1 a:hover {
+  color: var(--theme-color);
+}
+
 .template-select-wrap {
   display: flex;
   align-items: center;
