@@ -15,22 +15,39 @@
     // --- 3. JIKAN API LOGIC ---
 
     /**
-     * Fetches the most popular anime and displays them as cards.
+     * Fetches the top 100 most popular anime (4 pages) and displays them as cards.
      */
     async function fetchAndDisplayAnime() {
-        animeGrid.innerHTML = '<p class="loading-text">Loading popular anime...</p>'; // Update loading text
-        try {
-            // UPDATED: Changed the API endpoint
-            const response = await fetch('https://api.jikan.moe/v4/top/anime?filter=bypopularity');
-            // Check if the response was successful
-            if (!response.ok) throw new Error(`Failed to fetch popular anime (Status: ${response.status})`);
+        animeGrid.innerHTML = '<p class="loading-text">Loading top 100 popular anime...</p>'; // Update loading text
+        let allAnimeData = []; // Array to hold results from all pages
 
-            const data = await response.json();
+        try {
+            // Loop to fetch pages 1 through 4
+            for (let page = 1; page <= 4; page++) {
+                const response = await fetch(`https://api.jikan.moe/v4/top/anime?filter=bypopularity&page=${page}`);
+                if (!response.ok) {
+                    // Stop fetching if one page fails
+                    throw new Error(`Failed to fetch page ${page} (Status: ${response.status})`);
+                }
+                const data = await response.json();
+                
+                // Add the data from this page to our main array
+                if (data.data && data.data.length > 0) {
+                   allAnimeData = allAnimeData.concat(data.data);
+                } else {
+                    // Stop if a page has no data (we've reached the end)
+                    break;
+                }
+                 // Optional: Add a small delay between requests to be polite to the API
+                 await new Promise(resolve => setTimeout(resolve, 300)); // 300ms delay
+            }
+
             animeGrid.innerHTML = ''; // Clear loading text
 
-            // Check if data array exists and has items
-            if (data.data && data.data.length > 0) {
-                 data.data.forEach(anime => {
+            // Check if we got any data at all
+            if (allAnimeData.length > 0) {
+                // Now loop through the combined data
+                 allAnimeData.forEach(anime => {
                     const title = anime.title_english || anime.title;
                     const card = document.createElement('div');
                     card.className = 'anime-card';
@@ -63,6 +80,8 @@
         modalContent.innerHTML = '<p class="loading-text">Loading details...</p>';
 
         try {
+            // Adding a small delay before fetching modal details too
+             await new Promise(resolve => setTimeout(resolve, 300));
             const response = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/full`);
             if (!response.ok) throw new Error('Failed to fetch anime details');
 
