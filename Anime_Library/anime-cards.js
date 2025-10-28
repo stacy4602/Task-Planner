@@ -15,32 +15,38 @@
     // --- 3. JIKAN API LOGIC ---
 
     /**
-     * Fetches the currently airing anime and displays them as cards.
+     * Fetches the most popular anime and displays them as cards.
      */
     async function fetchAndDisplayAnime() {
+        animeGrid.innerHTML = '<p class="loading-text">Loading popular anime...</p>'; // Update loading text
         try {
-            const response = await fetch('https://api.jikan.moe/v4/seasons/now');
-            if (!response.ok) throw new Error('Failed to fetch seasonal anime');
-            
-            const data = await response.json();
-            animeGrid.innerHTML = ''; 
+            // UPDATED: Changed the API endpoint
+            const response = await fetch('https://api.jikan.moe/v4/top/anime?filter=bypopularity');
+            // Check if the response was successful
+            if (!response.ok) throw new Error(`Failed to fetch popular anime (Status: ${response.status})`);
 
-            data.data.forEach(anime => {
-                // UPDATED: Use English title, fall back to default title
-                const title = anime.title_english || anime.title;
-                
-                const card = document.createElement('div');
-                card.className = 'anime-card';
-                card.dataset.id = anime.mal_id;
-                
-                card.innerHTML = `
-                    <img src="${anime.images.jpg.image_url}" alt="${title}">
-                    <div class="anime-card-title">${title}</div>
-                `;
-                
-                card.addEventListener('click', () => openAnimeModal(anime.mal_id));
-                animeGrid.appendChild(card);
-            });
+            const data = await response.json();
+            animeGrid.innerHTML = ''; // Clear loading text
+
+            // Check if data array exists and has items
+            if (data.data && data.data.length > 0) {
+                 data.data.forEach(anime => {
+                    const title = anime.title_english || anime.title;
+                    const card = document.createElement('div');
+                    card.className = 'anime-card';
+                    card.dataset.id = anime.mal_id;
+
+                    card.innerHTML = `
+                        <img src="${anime.images.jpg.image_url}" alt="${title}">
+                        <div class="anime-card-title">${title}</div>
+                    `;
+
+                    card.addEventListener('click', () => openAnimeModal(anime.mal_id));
+                    animeGrid.appendChild(card);
+                });
+            } else {
+                 animeGrid.innerHTML = '<p class="loading-text">No popular anime found.</p>';
+            }
 
         } catch (error) {
             console.error(error);
@@ -48,7 +54,8 @@
         }
     }
 
-    /**
+    // (The rest of your functions: openAnimeModal, populateModal, closeModal, init remain the same)
+     /**
      * Shows the modal and fetches the full details for a specific anime.
      */
     async function openAnimeModal(animeId) {
@@ -58,10 +65,10 @@
         try {
             const response = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/full`);
             if (!response.ok) throw new Error('Failed to fetch anime details');
-            
+
             const data = await response.json();
             populateModal(data.data);
-        
+
         } catch (error) {
             console.error(error);
             modalContent.innerHTML = '<p class="loading-text" style="color: #ff8a80;">Could not load details.</p>';
@@ -72,7 +79,6 @@
      * Fills the modal with the fetched anime details.
      */
     function populateModal(anime) {
-        // UPDATED: Use English title, fall back to default title
         const title = anime.title_english || anime.title;
         const genres = anime.genres.map(g => g.name).join(', ');
 
@@ -102,7 +108,7 @@
     function init() {
         setTemplate(templateSelector.value);
         fetchAndDisplayAnime();
-        
+
         modalCloseBtn.addEventListener('click', closeModal);
         modalOverlay.addEventListener('click', (e) => {
             if (e.target === modalOverlay) {
