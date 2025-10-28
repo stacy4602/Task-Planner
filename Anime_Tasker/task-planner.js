@@ -44,8 +44,8 @@
             { name: 'Sukuna', quotes: ["Know your place, fool."], sticker: '../assets/characters/gojo.gif' }
         ],
         'template-demon-slayer': [
-            { name: 'Tanjiro', quotes: ["I can do it. I know I can do it."], sticker: '../assets/characters/dazai.gif' },
-            { name: 'Inosuke', quotes: ["Pig Assault!"], sticker: '../assets/characters/dazai.gif' }
+            { name: 'Tanjiro', quotes: ["I can do it. I know I can do it."], sticker: 'assets/characters/dazai.gif' },
+            { name: 'Inosuke', quotes: ["Pig Assault!"], sticker: 'assets/characters/dazai.gif' }
         ],
         'default': [
             { name: 'Sailor Moon', quotes: ["In the name of the moon, I’ll punish you!"], sticker: '../assets/characters/sailormoon1.gif' },
