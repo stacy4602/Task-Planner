@@ -1,101 +1,39 @@
-/* REFINED: General Styling & New Font */
-:root {
-  --theme-color: #ff6f91; /* Default theme color */
-}
+/* Task-planner-specific styles. Site-wide rules live in shared.css. */
+
 body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  color: white;
   background-size: cover;
   background-position: center center;
-  transition: background 0.5s ease, color 0.5s ease;
-  min-height: 100vh;
-  /* UPDATED: Flex layout pushes footer to bottom */
-  display: flex;
-  flex-direction: column;
 }
 
-/* === 1. NEW SITE-WIDE HEADER STYLES === */
-header.site-header {
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 1rem 50px;
-  width: 100%;
-  box-sizing: border-box;
-}
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1600px;
-  margin: 0 auto;
-}
-.site-header h1 {
-  margin: 0;
-  font-size: 2rem;
-  font-weight: 700;
-  text-shadow: 2px 2px 5px #000;
-}
-.site-header h1 a {
-  color: white;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-.site-header h1 a:hover {
-  color: var(--theme-color);
-}
-
-.template-select-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.template-select-wrap select {
-  font-size: 1rem;
-  font-family: 'Poppins', sans-serif;
-  border-radius: 10px;
-  border: 2px solid transparent;
-  padding: 0.4em 0.8em;
-  background-color: rgba(255, 255, 255, 0.9);
-  color: #222;
-  cursor: pointer;
-}
-
-/* === 2. ORIGINAL CONTENT STYLES === */
-
-/* This tag wraps all your page content */
+/* === Main content === */
 .page-content {
-  flex-grow: 1; /* Makes this section fill the space */
+  flex-grow: 1;
   width: 100%;
 }
 
-/* Your original header styles, now for the form area */
 header.page-header {
   backdrop-filter: blur(2px);
   padding: 1rem;
   text-align: center;
-  /* Removed border-bottom as it's now on the site-header */
 }
-/* Your original h1 style for "Anime Tasker" */
 header.page-header h1 {
   margin: 0 0 0.5em;
   font-weight: 700;
   text-shadow: 2px 2px 5px #000;
 }
 
-/* REFINED: Form inputs and controls */
+/* === Add-task form === */
 form#add-task-form {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.8rem;
   padding: 1rem;
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0, 0, 0, 0.3);
   border-radius: 15px;
   max-width: 1000px;
   margin: 0 auto 1rem auto;
 }
-/* (Input and button styles are unchanged) */
 input[type="text"], input[type="datetime-local"], select {
   font-size: 1rem;
   font-family: 'Poppins', sans-serif;
@@ -127,17 +65,11 @@ input[type="text"]:focus, input[type="datetime-local"]:focus, select:focus {
   transform: scale(1.05);
   box-shadow: 0 0 15px var(--theme-color);
 }
-.template-selector {
-  color: white;
-}
-.repeat-label{
-  color: white !important;
-}
-.task-list{
-  color: white;
-}
+.template-selector { color: white; }
+.repeat-label { color: white !important; }
+.task-list { color: white; }
 
-/* REFINED: Category containers */
+/* === Category containers === */
 #category-container {
   flex: 1;
   display: flex;
@@ -146,7 +78,6 @@ input[type="text"]:focus, input[type="datetime-local"]:focus, select:focus {
   justify-content: center;
   flex-wrap: wrap;
 }
-/* (All other .category-box, .task, .modal, etc. styles are unchanged) */
 .category-box {
   backdrop-filter: blur(2px);
   flex-basis: 450px;
@@ -178,7 +109,7 @@ input[type="text"]:focus, input[type="datetime-local"]:focus, select:focus {
   padding-right: 8px;
 }
 .task {
-  background-color: rgba(255,255,255,0.2);
+  background-color: rgba(255, 255, 255, 0.2);
   margin-bottom: 0.7rem;
   padding: 0.8rem 1rem;
   border-radius: 12px;
@@ -187,16 +118,15 @@ input[type="text"]:focus, input[type="datetime-local"]:focus, select:focus {
   justify-content: space-between;
   font-weight: 600;
   transition: all 0.3s ease;
-  backdrop-filter: blur(100px); 
 }
 .task:hover {
-  background-color: rgba(255,255,255,0.4);
+  background-color: rgba(255, 255, 255, 0.4);
   transform: scale(1.02);
 }
 .task-details {
   flex-grow: 1;
   margin-right: 10px;
-  word-break: break-word; 
+  word-break: break-word;
 }
 .task.completed .task-desc {
   text-decoration: line-through;
@@ -206,14 +136,12 @@ input[type="text"]:focus, input[type="datetime-local"]:focus, select:focus {
   font-size: 0.85rem;
   opacity: 0.7;
   margin-top: 4px;
-  display: block; 
+  display: block;
 }
 .task-time:empty {
-  display: none; 
+  display: none;
 }
-.task-actions {
-  flex-shrink: 0; 
-}
+.task-actions { flex-shrink: 0; }
 .task-actions button {
   background: none;
   border: none;
@@ -227,13 +155,15 @@ input[type="text"]:focus, input[type="datetime-local"]:focus, select:focus {
   color: var(--theme-color);
   transform: scale(1.2);
 }
+
+/* === Modals === */
 .modal-overlay {
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(5px);
-  display: none; 
+  display: none;
   justify-content: center;
   align-items: center;
   z-index: 9999;
@@ -245,13 +175,13 @@ input[type="text"]:focus, input[type="datetime-local"]:focus, select:focus {
   padding: 2rem;
   max-width: 400px;
   width: 90%;
-  text-align: left; 
+  text-align: left;
   box-shadow: 0 0 30px var(--theme-color);
 }
 .modal-content h3 {
   margin-top: 0;
   font-size: 1.7rem;
-  text-align: center; 
+  text-align: center;
 }
 #edit-task-form label {
   display: block;
@@ -262,7 +192,7 @@ input[type="text"]:focus, input[type="datetime-local"]:focus, select:focus {
 }
 #edit-task-form input, #edit-task-form select {
   width: 100%;
-  box-sizing: border-box; 
+  box-sizing: border-box;
   font-size: 1rem;
   font-family: 'Poppins', sans-serif;
   border-radius: 10px;
@@ -308,35 +238,17 @@ input[type="text"]:focus, input[type="datetime-local"]:focus, select:focus {
   color: white;
 }
 
-/* --- THEME DEFINITIONS --- */
-/* (These now apply the color to the new site-header) */
-body.template-default { --theme-color: #e11584; background-image: url('../assets/backgrounds/homescreen-bg.jpeg'); }
-body.template-sakura-pink { --theme-color: #ff87c0; background-image: url('../assets/backgrounds/sakura.jpg'); }
-body.template-one-piece { --theme-color: #39a2db; background-image: url('../assets/backgrounds/one-piece.avif'); }
-body.template-jujutsu-kaisen { --theme-color: #e53935; background-image: url('../assets/backgrounds/jujutsu-kaisen.jpeg'); }
-body.template-demon-slayer { --theme-color: #4db6ac; background-image: url('../assets/backgrounds/demon-slayer.jpeg'); }
-body.template-mount-fuji { --theme-color: #a7c7e7; background-image: url('../assets/backgrounds/mount-fuji.jpg'); }
+/* === Per-theme backgrounds and accents === */
+body.template-default        { background-image: url('../assets/backgrounds/homescreen-bg.jpeg'); }
+body.template-sakura-pink    { background-image: url('../assets/backgrounds/sakura.jpg'); }
+body.template-one-piece      { background-image: url('../assets/backgrounds/one-piece.avif'); }
+body.template-jujutsu-kaisen { background-image: url('../assets/backgrounds/jujutsu-kaisen.jpeg'); }
+body.template-demon-slayer   { background-image: url('../assets/backgrounds/demon-slayer.jpeg'); }
+body.template-mount-fuji     { background-image: url('../assets/backgrounds/mount-fuji.jpg'); }
 
-/* UPDATED: Theme background colors now apply to .site-header */
-body.template-sakura-pink header.page-header, body.template-sakura-pink .category-box { background-color: rgba(255, 135, 192, 0.2); color: #ff87c0; }
-body.template-default header.page-header, body.template-default .category-box { background-color: rgba(186, 1, 103, 0.2); color: #e11584; }
-body.template-one-piece header.page-header, body.template-one-piece .category-box { background-color: rgba(57, 162, 219, 0.2); color:#39a2db; }
-body.template-jujutsu-kaisen header.page-header, body.template-jujutsu-kaisen .category-box { background-color: rgba(229, 57, 53, 0.2); color:#e53935; }
-body.template-demon-slayer header.page-header, body.template-demon-slayer .category-box { background-color: rgba(77, 182, 172, 0.2); color:#4db6ac }
-body.template-mount-fuji header.page-header, body.template-mount-fuji .category-box { background-color: rgba(167, 199, 231, 0.2); color:#a7c7e7; }
-
-/* === 3. NEW FOOTER STYLES === */
-footer {
-    width: 100%;
-    text-align: center;
-    padding: 20px 50px;
-    background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    box-sizing: border-box;
-    margin-top: auto; /* Pushes footer to the bottom */
-}
-footer p {
-    margin: 0;
-    opacity: 0.7;
-}
+body.template-default        header.page-header, body.template-default        .category-box { background-color: rgba(186, 1, 103, 0.2); color: #e11584; }
+body.template-sakura-pink    header.page-header, body.template-sakura-pink    .category-box { background-color: rgba(255, 135, 192, 0.2); color: #ff87c0; }
+body.template-one-piece      header.page-header, body.template-one-piece      .category-box { background-color: rgba(57, 162, 219, 0.2); color: #39a2db; }
+body.template-jujutsu-kaisen header.page-header, body.template-jujutsu-kaisen .category-box { background-color: rgba(229, 57, 53, 0.2); color: #e53935; }
+body.template-demon-slayer   header.page-header, body.template-demon-slayer   .category-box { background-color: rgba(77, 182, 172, 0.2); color: #4db6ac; }
+body.template-mount-fuji     header.page-header, body.template-mount-fuji     .category-box { background-color: rgba(167, 199, 231, 0.2); color: #a7c7e7; }

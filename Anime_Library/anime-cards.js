@@ -9,13 +9,23 @@
     const pageHeading = document.getElementById('page-heading');
     const genreSelect = document.getElementById('genre-select');
 
+    // --- UTILITY: HTML escape for safely interpolating values into innerHTML templates ---
+    function escapeHtml(value) {
+        if (value == null) return '';
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
     // --- 2. JIKAN API LOGIC ---
 
-    // (fetchPopularAnime, fetchSearchedAnime, fetchAnimeByGenre, displayCards are unchanged)
     async function fetchPopularAnime() {
         animeGrid.innerHTML = '<p class="loading-text">Loading popular anime...</p>';
         pageHeading.textContent = 'Most Popular Anime';
-        searchInput.value = ''; 
+        searchInput.value = '';
         try {
             const response = await fetch(`https://api.jikan.moe/v4/top/anime?filter=bypopularity&limit=25`);
             if (!response.ok) throw new Error(`Failed to fetch popular anime (Status: ${response.status})`);
@@ -31,9 +41,13 @@
         }
     }
     async function fetchSearchedAnime(query) {
-        animeGrid.innerHTML = `<p class="loading-text">Searching for "${query}"...</p>`;
+        animeGrid.innerHTML = '';
+        const loading = document.createElement('p');
+        loading.className = 'loading-text';
+        loading.textContent = `Searching for "${query}"...`;
+        animeGrid.appendChild(loading);
         pageHeading.textContent = `Search Results for "${query}"`;
-        genreSelect.value = 'all'; 
+        genreSelect.value = 'all';
         try {
             const response = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}&sfw&limit=25`);
             if (!response.ok) throw new Error(`Failed to search (Status: ${response.status})`);
@@ -41,13 +55,22 @@
             displayCards(data.data);
         } catch (error) {
             console.error(error);
-            animeGrid.innerHTML = `<p class="loading-text" style="color: #ff8a80;">Could not find results for "${query}".</p>`;
+            animeGrid.innerHTML = '';
+            const errEl = document.createElement('p');
+            errEl.className = 'loading-text';
+            errEl.style.color = '#ff8a80';
+            errEl.textContent = `Could not find results for "${query}".`;
+            animeGrid.appendChild(errEl);
         }
     }
     async function fetchAnimeByGenre(genreId, genreName) {
-        animeGrid.innerHTML = `<p class="loading-text">Loading popular anime in ${genreName}...</p>`;
+        animeGrid.innerHTML = '';
+        const loading = document.createElement('p');
+        loading.className = 'loading-text';
+        loading.textContent = `Loading popular anime in ${genreName}...`;
+        animeGrid.appendChild(loading);
         pageHeading.textContent = `Popular ${genreName} Anime`;
-        searchInput.value = ''; 
+        searchInput.value = '';
         try {
             const response = await fetch(`https://api.jikan.moe/v4/anime?genres=${genreId}&order_by=popularity&sfw&limit=25`);
             if (!response.ok) throw new Error(`Failed to fetch genre (Status: ${response.status})`);
@@ -55,33 +78,47 @@
             displayCards(data.data);
         } catch (error) {
             console.error(error);
-            animeGrid.innerHTML = `<p class="loading-text" style="color: #ff8a80;">Could not load anime for ${genreName}.</p>`;
+            animeGrid.innerHTML = '';
+            const errEl = document.createElement('p');
+            errEl.className = 'loading-text';
+            errEl.style.color = '#ff8a80';
+            errEl.textContent = `Could not load anime for ${genreName}.`;
+            animeGrid.appendChild(errEl);
         }
     }
     function displayCards(animeList) {
-        animeGrid.innerHTML = ''; 
+        animeGrid.innerHTML = '';
         if (!animeList || animeList.length === 0) {
             animeGrid.innerHTML = '<p class="loading-text">No anime found.</p>';
             return;
         }
-        animeList.forEach(animeEntry => { 
-            const title = animeEntry.title_english || animeEntry.title; 
+        animeList.forEach(animeEntry => {
+            const title = animeEntry.title_english || animeEntry.title || 'Unknown';
             const card = document.createElement('div');
             card.className = 'anime-card';
             card.dataset.id = animeEntry.mal_id;
-            card.innerHTML = `
-                <img src="${animeEntry.images.jpg.image_url}" alt="${title}">
-                <div class="anime-card-title">${title}</div>
-            `;
+
+            const img = document.createElement('img');
+            img.src = animeEntry.images?.jpg?.image_url || '';
+            img.alt = title;
+            img.loading = 'lazy';
+
+            const titleEl = document.createElement('div');
+            titleEl.className = 'anime-card-title';
+            titleEl.textContent = title;
+
+            card.appendChild(img);
+            card.appendChild(titleEl);
             card.addEventListener('click', () => openAnimeModal(animeEntry.mal_id));
             animeGrid.appendChild(card);
         });
     }
 
-    // (openAnimeModal is unchanged)
     async function openAnimeModal(animeId) {
         modalOverlay.style.display = 'flex';
+        modalOverlay.setAttribute('aria-hidden', 'false');
         modalContent.innerHTML = '<p class="loading-text">Loading details...</p>';
+        modalCloseBtn.focus();
         try {
             const response = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/full`);
             if (!response.ok) throw new Error(`Failed to fetch details (Status: ${response.status})`);
@@ -91,15 +128,15 @@
             fetchAndDisplayRecommendations(animeId);
         } catch (error) {
             console.error("Critical Error:", error);
-            modalContent.innerHTML = `<p class="loading-text" style="color: #ff8a80;">Could not load details. <br> (Error: ${error.message})</p>`;
+            modalContent.innerHTML = '';
+            const errEl = document.createElement('p');
+            errEl.className = 'loading-text';
+            errEl.style.color = '#ff8a80';
+            errEl.textContent = `Could not load details. (Error: ${error.message})`;
+            modalContent.appendChild(errEl);
         }
     }
-    
-    // (capitalizeFirstLetter, getTrailerData, findBestTrailerEmbedUrl are unchanged)
-    function capitalizeFirstLetter(string) {
-        if (!string) return '';
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
+
     function getTrailerData(embedUrl) {
         if (!embedUrl) return null;
         try {
@@ -133,78 +170,88 @@
                 return anyMV.video.embed_url;
             }
         }
-        return null; 
+        return null;
     }
 
-    // (fetchAndDisplayTrailer is unchanged)
     async function fetchAndDisplayTrailer(animeId, anime) {
         const placeholder = document.getElementById('trailer-placeholder');
+        if (!placeholder) return;
         try {
             const videosResponse = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/videos`);
             if (!videosResponse.ok) throw new Error('Videos not found');
             const videosData = await videosResponse.json();
             const bestEmbedUrl = findBestTrailerEmbedUrl(anime, videosData.data);
             const trailerData = getTrailerData(bestEmbedUrl);
-            let trailerHtml = '<p class="no-trailer">No trailer available.</p>';
+            placeholder.innerHTML = '';
             if (trailerData) {
-                trailerHtml = `
-                    <a href="${trailerData.watchUrl}" target="_blank" rel="noopener noreferrer" class="trailer-thumbnail">
-                        <img src="${trailerData.thumbnailUrl}" alt="Anime Trailer Thumbnail">
-                        <div class="play-icon">►</div>
-                    </a>
-                `;
+                const link = document.createElement('a');
+                link.href = trailerData.watchUrl;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.className = 'trailer-thumbnail';
+                const thumb = document.createElement('img');
+                thumb.src = trailerData.thumbnailUrl;
+                thumb.alt = 'Anime Trailer Thumbnail';
+                thumb.loading = 'lazy';
+                const playIcon = document.createElement('div');
+                playIcon.className = 'play-icon';
+                playIcon.textContent = '►';
+                link.appendChild(thumb);
+                link.appendChild(playIcon);
+                placeholder.appendChild(link);
+            } else {
+                const msg = document.createElement('p');
+                msg.className = 'no-trailer';
+                msg.textContent = 'No trailer available.';
+                placeholder.appendChild(msg);
             }
-            if (placeholder) placeholder.innerHTML = trailerHtml;
         } catch (error) {
             console.log("Could not load trailer:", error.message);
-            if (placeholder) placeholder.innerHTML = '<p class="no-trailer">No trailer available.</p>';
+            placeholder.innerHTML = '';
+            const msg = document.createElement('p');
+            msg.className = 'no-trailer';
+            msg.textContent = 'No trailer available.';
+            placeholder.appendChild(msg);
         }
     }
 
-    /**
-     * NEW: Card builder for "Collection".
-     * Uses 'entry.name' and no image.
-     */
     function createCollectionCardHtml(animeEntry, typeInfo = '') {
-        const title = animeEntry.name; // <-- FIX for "undefined"
-        const imageHtml = `<div class="mini-card-no-image">?</div>`; // No images available
-
+        const title = escapeHtml(animeEntry.name);
+        const malId = escapeHtml(animeEntry.mal_id);
+        const typeHtml = typeInfo ? `<span class="mini-card-type-info">${escapeHtml(typeInfo)}</span>` : '';
         return `
-            <div class="mini-card collection-card" data-id="${animeEntry.mal_id}">
-                ${imageHtml}
+            <div class="mini-card collection-card" data-id="${malId}">
+                <div class="mini-card-no-image">?</div>
                 <div class="mini-card-overlay">
-                    ${typeInfo ? `<span class="mini-card-type-info">${typeInfo}</span>` : ''}
+                    ${typeHtml}
                     <p class="mini-card-title">${title}</p>
                 </div>
             </div>
         `;
     }
 
-    /**
-     * NEW: Card builder for "Recommendations".
-     * Uses 'entry.title' and has an image.
-     */
     function createRecommendationCardHtml(animeEntry, typeInfo = '') {
-        const title = animeEntry.title_english || animeEntry.title;
-        let imageHtml = '';
+        const title = escapeHtml(animeEntry.title_english || animeEntry.title);
+        const malId = escapeHtml(animeEntry.mal_id);
+        const typeHtml = typeInfo ? `<span class="mini-card-type-info">${escapeHtml(typeInfo)}</span>` : '';
+        let imageHtml;
         if (animeEntry.images && animeEntry.images.jpg) {
-            imageHtml = `<img src="${animeEntry.images.jpg.image_url}" alt="${title}">`;
+            const imgUrl = escapeHtml(animeEntry.images.jpg.image_url);
+            imageHtml = `<img src="${imgUrl}" alt="${title}" loading="lazy">`;
         } else {
             imageHtml = `<div class="mini-card-no-image">?</div>`;
         }
-
         return `
-            <div class="mini-card recommendation-card" data-id="${animeEntry.mal_id}">
+            <div class="mini-card recommendation-card" data-id="${malId}">
                 ${imageHtml}
                 <div class="mini-card-overlay">
-                    ${typeInfo ? `<span class="mini-card-type-info">${typeInfo}</span>` : ''}
+                    ${typeHtml}
                     <p class="mini-card-title">${title}</p>
                 </div>
             </div>
         `;
     }
-    
-    // (buildCollectionHtml is updated to use the new card builder)
+
     function buildCollectionHtml(relations) {
         if (!relations || relations.length === 0) return '';
         let cardsHtml = '';
@@ -220,13 +267,12 @@
         if (cardsHtml === '') return '';
         return `
             <div class="modal-section" id="collection-section">
-                <h3>Collection</h3> 
+                <h3>Collection</h3>
                 <div class="mini-card-grid">${cardsHtml}</div>
             </div>
         `;
     }
-    
-    // (buildRecommendationsHtml is updated to use the new card builder)
+
     function buildRecommendationsHtml(recommendations) {
         if (!recommendations || recommendations.length === 0) return '';
         let cardsHtml = '';
@@ -242,18 +288,17 @@
             </div>
         `;
     }
-    
-    // (fetchAndDisplayRecommendations is unchanged)
+
     async function fetchAndDisplayRecommendations(animeId) {
         const placeholder = document.getElementById('recommendations-placeholder');
+        if (!placeholder) return;
         try {
             const response = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/recommendations`);
             if (!response.ok) throw new Error('No recommendations found');
             const recommendationsData = await response.json();
             const recommendationsHtml = buildRecommendationsHtml(recommendationsData.data);
-            if (placeholder && recommendationsHtml) {
+            if (recommendationsHtml) {
                 placeholder.innerHTML = recommendationsHtml;
-                // Add event listeners
                 placeholder.querySelectorAll('.recommendation-card').forEach(card => {
                     card.addEventListener('click', (event) => {
                         event.stopPropagation();
@@ -266,29 +311,26 @@
         }
     }
 
-    /**
-     * UPDATED: The HTML structure is now correct.
-     * Trailer, Related, and Recommendations are placed *outside* the details div.
-     */
     function populateModal(anime) {
-        const title = anime.title_english || anime.title;
-        const genres = anime.genres.map(g => g.name).join(', ');
-        const rating = anime.rating || 'N/A';
-        const status = anime.status || 'N/A';
-        const score = anime.score ? `⭐ ${anime.score}` : 'N/A';
-        const rank = anime.rank ? `#${anime.rank}` : 'N/A';
-        const popularity = anime.popularity ? `#${anime.popularity}` : 'N/A';
-        const episodes = anime.episodes ? `${anime.episodes}` : 'N/A';
-        const type = anime.type || 'N/A';
-        const airedDate = anime.aired.string || 'N/A';
-        const studios = anime.studios.map(s => s.name).join(', ') || 'N/A';
-        
-        // This data is in the /full endpoint, so we can build it now.
+        const title = escapeHtml(anime.title_english || anime.title);
+        const genres = escapeHtml((anime.genres || []).map(g => g.name).join(', '));
+        const rating = escapeHtml(anime.rating || 'N/A');
+        const status = escapeHtml(anime.status || 'N/A');
+        const score = anime.score ? `⭐ ${escapeHtml(anime.score)}` : 'N/A';
+        const rank = anime.rank ? `#${escapeHtml(anime.rank)}` : 'N/A';
+        const popularity = anime.popularity ? `#${escapeHtml(anime.popularity)}` : 'N/A';
+        const episodes = anime.episodes ? escapeHtml(anime.episodes) : 'N/A';
+        const type = escapeHtml(anime.type || 'N/A');
+        const airedDate = escapeHtml((anime.aired && anime.aired.string) || 'N/A');
+        const studios = escapeHtml((anime.studios || []).map(s => s.name).join(', ') || 'N/A');
+        const imageUrl = escapeHtml(anime.images?.jpg?.large_image_url || '');
+        const synopsis = escapeHtml(anime.synopsis || 'No synopsis available.');
+
         const relatedHtml = buildCollectionHtml(anime.relations);
 
         modalContent.innerHTML = `
             <div id="modal-image-container">
-                <img src="${anime.images.jpg.large_image_url}" alt="${title}" id="modal-image">
+                <img src="${imageUrl}" alt="${title}" id="modal-image" loading="lazy">
                 <button class="add-to-list-btn">+ Add to My List</button>
             </div>
 
@@ -315,7 +357,7 @@
                 </div>
 
                 <p id="modal-genres"><strong>Genres:</strong> ${genres || 'N/A'}</p>
-                <p id="modal-synopsis">${anime.synopsis || 'No synopsis available.'}</p>
+                <p id="modal-synopsis">${synopsis}</p>
 
                 <ul class="modal-info-list">
                     <li>Type: <span>${type}</span></li>
@@ -323,18 +365,16 @@
                     <li>Studios: <span>${studios}</span></li>
                 </ul>
             </div>
-            
+
             <div id="trailer-placeholder" class="modal-section-full-width">
                 <p class="no-trailer">Loading trailer...</p>
             </div>
-            
-            ${relatedHtml} 
-            
-            <div id="recommendations-placeholder" class="modal-section-full-width">
-                </div>
+
+            ${relatedHtml}
+
+            <div id="recommendations-placeholder" class="modal-section-full-width"></div>
         `;
-        
-        // Add listeners for the COLLECTION cards we just added
+
         modalContent.querySelectorAll('.collection-card').forEach(card => {
             card.addEventListener('click', (event) => {
                 event.stopPropagation();
@@ -345,11 +385,11 @@
 
     function closeModal() {
         modalOverlay.style.display = 'none';
+        modalOverlay.setAttribute('aria-hidden', 'true');
         modalContent.innerHTML = '';
     }
 
     // --- 4. INITIALIZATION ---
-    // (This entire section is unchanged)
     function populateGenres() {
         const curatedGenres = [
             { id: 1, name: "Action" }, { id: 2, name: "Adventure" }, { id: 46, name: "Award Winning" },
@@ -368,7 +408,7 @@
     }
     function init() {
         populateGenres();
-        fetchPopularAnime(); 
+        fetchPopularAnime();
         searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const searchTerm = searchInput.value.trim();
@@ -376,7 +416,7 @@
                 fetchSearchedAnime(searchTerm);
             } else {
                 fetchPopularAnime();
-                genreSelect.value = 'all'; 
+                genreSelect.value = 'all';
             }
         });
         genreSelect.addEventListener('change', (e) => {
@@ -391,6 +431,11 @@
         modalCloseBtn.addEventListener('click', closeModal);
         modalOverlay.addEventListener('click', (e) => {
             if (e.target === modalOverlay) {
+                closeModal();
+            }
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modalOverlay.style.display === 'flex') {
                 closeModal();
             }
         });
