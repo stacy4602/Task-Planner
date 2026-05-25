@@ -1,25 +1,20 @@
 (() => {
-    // --- 1. THEME SWITCHING ---
+    const THEME_STORAGE_KEY = 'anime_world_theme';
     const templateSelector = document.getElementById('template-selector');
-
-    /**
-     * Applies the selected theme class to the body.
-     * @param {string} templateName - The class name of the theme to apply.
-     */
-    function setTemplate(templateName) {
-        document.body.className = templateName;
-    }
-
-    templateSelector.addEventListener('change', (e) => {
-        setTemplate(e.target.value);
-    });
-
-    // --- 2. JIKAN API FETCHING ---
     const animeListContainer = document.getElementById('anime-list-container');
 
-    /**
-     * Fetches top anime from Jikan and populates the list.
-     */
+    function setTemplate(templateName) {
+        document.body.className = templateName;
+        templateSelector.value = templateName;
+        try { localStorage.setItem(THEME_STORAGE_KEY, templateName); } catch (_) { /* storage unavailable */ }
+    }
+
+    function loadSavedTheme() {
+        try { return localStorage.getItem(THEME_STORAGE_KEY); } catch (_) { return null; }
+    }
+
+    templateSelector.addEventListener('change', (e) => setTemplate(e.target.value));
+
     async function fetchTopAnime() {
         try {
             const response = await fetch('https://api.jikan.moe/v4/top/anime');
@@ -31,38 +26,53 @@
             animeListContainer.innerHTML = '';
 
             data.data.forEach(anime => {
-                // UPDATED: Use English title, fall back to default title
-                const title = anime.title_english || anime.title;
+                const title = anime.title_english || anime.title || 'Unknown';
 
                 const animeItem = document.createElement('div');
                 animeItem.className = 'anime-item';
-                
-                animeItem.innerHTML = `
-                    <span class="anime-rank">#${anime.rank}</span>
-                    <img src="${anime.images.jpg.image_url}" alt="${title}">
-                    <div class="anime-details">
-                        <h4>${title}</h4>
-                        <span class="anime-score">⭐ ${anime.score}</span>
-                    </div>
-                `;
-                
+
+                const rank = document.createElement('span');
+                rank.className = 'anime-rank';
+                rank.textContent = anime.rank ? `#${anime.rank}` : '—';
+
+                const img = document.createElement('img');
+                img.src = anime.images?.jpg?.image_url || '';
+                img.alt = title;
+                img.loading = 'lazy';
+
+                const details = document.createElement('div');
+                details.className = 'anime-details';
+
+                const h4 = document.createElement('h4');
+                h4.textContent = title;
+
+                const score = document.createElement('span');
+                score.className = 'anime-score';
+                score.textContent = `⭐ ${anime.score ?? 'N/A'}`;
+
+                details.appendChild(h4);
+                details.appendChild(score);
+                animeItem.appendChild(rank);
+                animeItem.appendChild(img);
+                animeItem.appendChild(details);
                 animeListContainer.appendChild(animeItem);
             });
 
         } catch (error) {
             console.error("Failed to fetch top anime:", error);
-            animeListContainer.innerHTML = '<p class="error-text">Could not load top anime. Please try again later.</p>';
+            animeListContainer.innerHTML = '';
+            const errorEl = document.createElement('p');
+            errorEl.className = 'error-text';
+            errorEl.textContent = 'Could not load top anime. Please try again later.';
+            animeListContainer.appendChild(errorEl);
         }
     }
 
-    /**
-     * Initializes the homescreen
-     */
     function init() {
-        setTemplate(templateSelector.value);
+        const saved = loadSavedTheme();
+        setTemplate(saved || templateSelector.value);
         fetchTopAnime();
     }
 
     init();
-
 })();
