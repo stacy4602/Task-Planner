@@ -149,6 +149,104 @@ header h1 {
     margin-bottom: 20px;
 }
 
+/* --- Tabs --- */
+.right-panel-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+.right-panel-tabs .tab {
+    flex: 1;
+    padding: 12px 16px;
+    background: none;
+    border: none;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0.6;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.3s ease;
+}
+.right-panel-tabs .tab:hover { opacity: 0.9; }
+.right-panel-tabs .tab.active {
+    opacity: 1;
+    border-bottom-color: var(--theme-color);
+    color: var(--theme-color);
+}
+
+.tab-panel { display: none; flex: 1; min-height: 0; flex-direction: column; }
+.tab-panel.active { display: flex; }
+.tab-panel .anime-list { flex: 1; }
+
+/* --- My List items --- */
+#my-list-container {
+    overflow-y: auto;
+    padding-right: 10px;
+    flex: 1;
+}
+#my-list-container::-webkit-scrollbar { width: 8px; }
+#my-list-container::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+#my-list-container::-webkit-scrollbar-thumb { background: var(--theme-color); border-radius: 4px; }
+
+.my-list-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 12px;
+    text-decoration: none;
+    color: white;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.my-list-item:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(2px);
+}
+.my-list-item img {
+    width: 50px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 5px;
+    flex-shrink: 0;
+}
+.my-list-details {
+    flex: 1;
+    min-width: 0;
+}
+.my-list-details h4 {
+    margin: 0 0 6px 0;
+    font-size: 1rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.my-list-meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 0.8rem;
+    flex-wrap: wrap;
+}
+.status-badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.status-badge.status-planned   { background-color: rgba(150, 150, 150, 0.4); color: white; }
+.status-badge.status-watching  { background-color: var(--theme-color); color: #121212; }
+.status-badge.status-completed { background-color: rgba(76, 175, 80, 0.5); color: white; }
+.eps-info { opacity: 0.7; }
+
 .anime-list {
     overflow-y: auto; /* This makes the list scrollable! */
     padding-right: 10px; /* Space for the scrollbar */
