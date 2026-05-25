@@ -9,15 +9,183 @@
     const pageHeading = document.getElementById('page-heading');
     const genreSelect = document.getElementById('genre-select');
 
-    // --- UTILITY: HTML escape for safely interpolating values into innerHTML templates ---
-    function escapeHtml(value) {
-        if (value == null) return '';
-        return String(value)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
+    // --- MY LIST + TASK INTEGRATION ---
+    const MY_LIST_KEY = 'anime_world_my_list';
+    const TASKS_KEY = 'anime_task_planner_tasks';
+
+    function loadMyList() {
+        try { return JSON.parse(localStorage.getItem(MY_LIST_KEY)) || []; }
+        catch (_) { return []; }
+    }
+    function saveMyList(list) {
+        try { localStorage.setItem(MY_LIST_KEY, JSON.stringify(list)); }
+        catch (e) { console.error('Failed to save My List:', e); }
+    }
+    function findInMyList(malId) {
+        return loadMyList().find(e => String(e.malId) === String(malId));
+    }
+    function upsertInMyList(entry) {
+        const list = loadMyList();
+        const idx = list.findIndex(e => String(e.malId) === String(entry.malId));
+        if (idx >= 0) list[idx] = { ...list[idx], ...entry };
+        else list.push(entry);
+        saveMyList(list);
+    }
+    function removeFromMyList(malId) {
+        saveMyList(loadMyList().filter(e => String(e.malId) !== String(malId)));
+    }
+
+    function addAnimeAsTask(title) {
+        let tasks = [];
+        try { tasks = JSON.parse(localStorage.getItem(TASKS_KEY)) || []; }
+        catch (_) { tasks = []; }
+        tasks.push({
+            id: 'task-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8),
+            desc: `Watch ${title}`,
+            time: null,
+            category: 'Anime World',
+            completed: false,
+            repeatDaily: false
+        });
+        try { localStorage.setItem(TASKS_KEY, JSON.stringify(tasks)); }
+        catch (e) { console.error('Failed to save task:', e); }
+    }
+
+    // --- TOAST ---
+    let toastTimer = null;
+    function showToast(message) {
+        let toast = document.getElementById('app-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'app-toast';
+            toast.setAttribute('role', 'status');
+            document.body.appendChild(toast);
+        }
+        toast.textContent = message;
+        toast.classList.add('visible');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('visible'), 3000);
+    }
+
+    // --- MY LIST MODAL CONTROLS ---
+    function buildMyListControls(anime) {
+        const container = document.createElement('div');
+        container.className = 'my-list-controls';
+        refreshMyListControls(container, anime);
+        return container;
+    }
+
+    function refreshMyListControls(container, anime) {
+        const malId = anime.mal_id;
+        const title = anime.title_english || anime.title;
+        const imageUrl = (anime.images && anime.images.jpg && anime.images.jpg.image_url) || '';
+        const totalEpisodes = anime.episodes || null;
+        const entry = findInMyList(malId);
+        container.innerHTML = '';
+
+        if (!entry) {
+            const addBtn = document.createElement('button');
+            addBtn.className = 'add-to-list-btn';
+            addBtn.textContent = '+ Add to My List';
+            addBtn.addEventListener('click', () => {
+                upsertInMyList({
+                    malId,
+                    title,
+                    imageUrl,
+                    totalEpisodes,
+                    episodesWatched: 0,
+                    status: 'planned',
+                    addedAt: Date.now()
+                });
+                showToast(`Added "${title}" to My List`);
+                refreshMyListControls(container, anime);
+            });
+            container.appendChild(addBtn);
+        } else {
+            // Status select
+            const statusRow = document.createElement('div');
+            statusRow.className = 'my-list-row my-list-status-row';
+            const statusLabel = document.createElement('label');
+            statusLabel.textContent = 'Status';
+            const statusSelect = document.createElement('select');
+            ['planned', 'watching', 'completed'].forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s;
+                opt.textContent = s.charAt(0).toUpperCase() + s.slice(1);
+                if (entry.status === s) opt.selected = true;
+                statusSelect.appendChild(opt);
+            });
+            statusSelect.addEventListener('change', () => {
+                entry.status = statusSelect.value;
+                upsertInMyList(entry);
+            });
+            statusRow.appendChild(statusLabel);
+            statusRow.appendChild(statusSelect);
+            container.appendChild(statusRow);
+
+            // Episode counter (only when total is known)
+            if (totalEpisodes) {
+                const epsRow = document.createElement('div');
+                epsRow.className = 'my-list-row my-list-eps-row';
+                const epsLabel = document.createElement('label');
+                epsLabel.textContent = 'Episodes';
+                const epsControls = document.createElement('div');
+                epsControls.className = 'eps-controls';
+
+                const minus = document.createElement('button');
+                minus.type = 'button';
+                minus.textContent = '−';
+                const count = document.createElement('span');
+                count.className = 'eps-count';
+                count.textContent = `${entry.episodesWatched} / ${totalEpisodes}`;
+                const plus = document.createElement('button');
+                plus.type = 'button';
+                plus.textContent = '+';
+
+                const updateCount = (delta) => {
+                    const next = Math.max(0, Math.min(totalEpisodes, (entry.episodesWatched || 0) + delta));
+                    entry.episodesWatched = next;
+                    if (next >= totalEpisodes) {
+                        entry.status = 'completed';
+                        statusSelect.value = 'completed';
+                    } else if (next > 0 && entry.status === 'planned') {
+                        entry.status = 'watching';
+                        statusSelect.value = 'watching';
+                    }
+                    upsertInMyList(entry);
+                    count.textContent = `${entry.episodesWatched} / ${totalEpisodes}`;
+                };
+                minus.addEventListener('click', () => updateCount(-1));
+                plus.addEventListener('click', () => updateCount(1));
+
+                epsControls.appendChild(minus);
+                epsControls.appendChild(count);
+                epsControls.appendChild(plus);
+                epsRow.appendChild(epsLabel);
+                epsRow.appendChild(epsControls);
+                container.appendChild(epsRow);
+            }
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-from-list-btn';
+            removeBtn.textContent = '✕ Remove from List';
+            removeBtn.addEventListener('click', () => {
+                removeFromMyList(malId);
+                showToast(`Removed "${title}" from My List`);
+                refreshMyListControls(container, anime);
+            });
+            container.appendChild(removeBtn);
+        }
+
+        // Always available: Add as Task
+        const taskBtn = document.createElement('button');
+        taskBtn.className = 'add-as-task-btn';
+        taskBtn.textContent = '+ Add as Task';
+        taskBtn.addEventListener('click', () => {
+            addAnimeAsTask(title);
+            showToast(`Added "Watch ${title}" to Task Planner`);
+        });
+        container.appendChild(taskBtn);
     }
 
     // --- 2. JIKAN API LOGIC ---
@@ -330,8 +498,8 @@
 
         modalContent.innerHTML = `
             <div id="modal-image-container">
-                <img src="${imageUrl}" alt="${title}" id="modal-image" loading="lazy">
-                <button class="add-to-list-btn">+ Add to My List</button>
+                <img src="${anime.images.jpg.large_image_url}" alt="${title}" id="modal-image">
+                <div id="my-list-controls-mount"></div>
             </div>
 
             <div id="modal-details">
@@ -374,7 +542,14 @@
 
             <div id="recommendations-placeholder" class="modal-section-full-width"></div>
         `;
+        
+        // Mount the My List / Task controls
+        const controlsMount = modalContent.querySelector('#my-list-controls-mount');
+        if (controlsMount) {
+            controlsMount.replaceWith(buildMyListControls(anime));
+        }
 
+        // Add listeners for the COLLECTION cards we just added
         modalContent.querySelectorAll('.collection-card').forEach(card => {
             card.addEventListener('click', (event) => {
                 event.stopPropagation();
@@ -409,6 +584,10 @@
     function init() {
         populateGenres();
         fetchPopularAnime();
+
+        const animeIdFromUrl = new URLSearchParams(window.location.search).get('anime');
+        if (animeIdFromUrl) openAnimeModal(animeIdFromUrl);
+
         searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const searchTerm = searchInput.value.trim();

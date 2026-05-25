@@ -48,9 +48,19 @@
         </div>
         
         <div class="homescreen-right">
-            <h2>Top Animes</h2>
-            <div class="anime-list" id="anime-list-container">
-                <p class="loading-text">Loading top anime...</p>
+            <div class="right-panel-tabs" role="tablist">
+                <button type="button" class="tab active" data-tab="top" role="tab" aria-selected="true">Top Anime</button>
+                <button type="button" class="tab" data-tab="mylist" role="tab" aria-selected="false">My List</button>
+            </div>
+            <div class="tab-panel active" id="tab-top" role="tabpanel">
+                <div class="anime-list" id="anime-list-container">
+                    <p class="loading-text">Loading top anime...</p>
+                </div>
+            </div>
+            <div class="tab-panel" id="tab-mylist" role="tabpanel">
+                <div id="my-list-container">
+                    <p class="loading-text">Loading your list...</p>
+                </div>
             </div>
         </div>
 
