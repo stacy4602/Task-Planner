@@ -9,6 +9,17 @@
     const pageHeading = document.getElementById('page-heading');
     const genreSelect = document.getElementById('genre-select');
 
+    // --- UTILITY: HTML escape for safely interpolating values into innerHTML templates ---
+    function escapeHtml(value) {
+        if (value == null) return '';
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
     // --- MY LIST + TASK INTEGRATION ---
     const MY_LIST_KEY = 'anime_world_my_list';
     const TASKS_KEY = 'anime_task_planner_tasks';
@@ -498,7 +509,7 @@
 
         modalContent.innerHTML = `
             <div id="modal-image-container">
-                <img src="${anime.images.jpg.large_image_url}" alt="${title}" id="modal-image">
+                <img src="${imageUrl}" alt="${title}" id="modal-image" loading="lazy">
                 <div id="my-list-controls-mount"></div>
             </div>
 

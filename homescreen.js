@@ -96,7 +96,6 @@
     }
 
     // --- 2. JIKAN API FETCHING ---
-    const animeListContainer = document.getElementById('anime-list-container');
 
     async function fetchTopAnime() {
         try {
@@ -152,7 +151,8 @@
     }
 
     function init() {
-        setTemplate(templateSelector.value);
+        const saved = loadSavedTheme();
+        setTemplate(saved || templateSelector.value);
         setupTabs();
         renderMyList();
         fetchTopAnime();
